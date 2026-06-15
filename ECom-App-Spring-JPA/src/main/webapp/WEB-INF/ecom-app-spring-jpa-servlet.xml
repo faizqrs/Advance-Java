@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+               http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/data/jpa
+               http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <!-- ═══════════════════════════════════════════
+         1. Component Scan — picks up @Controller,
+            @Service, @Repository across all packages
+    ═══════════════════════════════════════════ -->
+    <context:component-scan base-package="com.ecom" />
+
+    <!-- ═══════════════════════════════════════════
+         2. Enable @RequestMapping, @GetMapping etc.
+    ═══════════════════════════════════════════ -->
+    <mvc:annotation-driven />
+
+    <!-- ═══════════════════════════════════════════
+         3. Static resources — CSS, JS, images
+    ═══════════════════════════════════════════ -->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <!-- ═══════════════════════════════════════════
+         4. JSP View Resolver
+    ═══════════════════════════════════════════ -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- ═══════════════════════════════════════════
+         5. DataSource — your MySQL connection
+    ═══════════════════════════════════════════ -->
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/E_Com_Spring_Db" />
+        <property name="username" value="root" />
+        <property name="password" value="Faisal@1998" />
+    </bean>
+
+    <!-- ═══════════════════════════════════════════
+         6. JPA EntityManagerFactory
+            — Hibernate 6 as the JPA provider
+            — scans ALL entity packages under com.ecom
+    ═══════════════════════════════════════════ -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.ecom" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <!-- Correct dialect for Hibernate 6 -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <!-- Auto creates / updates tables from @Entity classes -->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!-- Print SQL to console during development -->
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ═══════════════════════════════════════════
+         7. Transaction Manager for JPA
+            — must be JpaTransactionManager,
+              NOT HibernateTransactionManager
+    ═══════════════════════════════════════════ -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <!-- ═══════════════════════════════════════════
+         8. Enable @Transactional on service methods
+    ═══════════════════════════════════════════ -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!-- ═══════════════════════════════════════════
+         9. Spring Data JPA — auto-creates all your
+            CrudRepository / JpaRepository beans
+    ═══════════════════════════════════════════ -->
+    <jpa:repositories
+        base-package="com.ecom"
+        entity-manager-factory-ref="entityManagerFactory"
+        transaction-manager-ref="transactionManager" />
+
+</beans>
