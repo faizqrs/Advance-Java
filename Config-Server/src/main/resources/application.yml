@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/kodewala-academy/interview-prep.git
+          uri: https://github.com/faizqrs/Advance-Java.git
           default-label: main
           clone-on-start: true 
-          search-paths: configs/18thaug
+          search-paths: Config-Server
