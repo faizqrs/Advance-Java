@@ -9,4 +9,4 @@ spring:
           uri: https://github.com/faizqrs/Advance-Java.git
           default-label: main
           clone-on-start: true 
-          search-paths: Config-Server
+          search-paths: configs
