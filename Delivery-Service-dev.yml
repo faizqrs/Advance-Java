@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Delivery-Service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: delivery
+      auto-offset-reset: earliest
+
+server:
+  port: 8084
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
