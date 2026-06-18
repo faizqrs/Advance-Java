@@ -34,3 +34,6 @@ eureka:
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5p [${spring.application.name},%X{traceId},%X{spanId}] %logger{36} - %msg%n"
