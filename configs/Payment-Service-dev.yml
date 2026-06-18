@@ -32,3 +32,10 @@ eureka:
   tracing:
     sampling:
       probability: 1.0
+feign:
+  hystrix:
+    enabled: true
+
+    logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5p [${spring.application.name},%X{traceId},%X{spanId}] %logger{36} - %msg%n"
