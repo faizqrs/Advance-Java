@@ -1,36 +1,41 @@
 spring:
   application:
     name: Payment-Service
-  
+
   datasource:
     url: jdbc:mysql://localhost:3306/orderDb
     username: root
     password: Faisal@1998
-  
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
-server:
-  port: 8081
-
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
+
+server:
+  port: 8081
+
 eureka:
+  instance:
+    prefer-ip-address: true
+
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-      management:
+management:
   tracing:
     sampling:
       probability: 1.0
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5p [${spring.application.name},%X{traceId},%X{spanId}] %logger{36} - %msg%n"
+
 feign:
   hystrix:
     enabled: true
-
-    logging:
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5p [${spring.application.name},%X{traceId},%X{spanId}] %logger{36} - %msg%n"
