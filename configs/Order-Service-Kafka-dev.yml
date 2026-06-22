@@ -36,9 +36,18 @@ management:
     sampling:
       probability: 1.0
 
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5p [${spring.application.name},%X{traceId},%X{spanId}] %logger{36} - %msg%n"
+
+  level:
+    io.github.resilience4j: DEBUG
+
 resilience4j:
   circuitbreaker:
     instances:
@@ -48,3 +57,4 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 30s
         permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
